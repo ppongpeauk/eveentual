@@ -7,7 +7,7 @@ import './App.css'
 // pages
 import Home from './pages/Home'
 import Create from './pages/Create'
-import Party from './pages/Event'
+import Event from './pages/Event'
 import NotFound from './pages/NotFound'
 
 // components
@@ -36,7 +36,7 @@ function App() {
           <Route path='/'>
             <Route index element={<Navigate to='/create' replace />} />
             <Route path='/create' element={<Create />} />
-            <Route path='/event/:id' element={<Party />} />
+            <Route path='/event/:id' element={<Event />} />
             <Route path='*' element={<NotFound />} />
           </Route>
         </Routes>

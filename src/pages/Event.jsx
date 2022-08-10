@@ -11,7 +11,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 
 import moment from 'moment';
 
-export default function Party() {
+export default function Event() {
   let { id } = useParams();
   let navigate = useNavigate();
   const [busy, setBusy] = useState(false);
@@ -25,6 +25,7 @@ export default function Party() {
 
   const [filteredMemberList, setFilteredMemberList] = useState({});
 
+  // search filter
   function onSearchFilterChange() {
     let filteredArray = {};
     if (!filterNameRef || filterNameRef.current.value === '') {
@@ -40,6 +41,7 @@ export default function Party() {
     console.log(party.partyMembers)
   }
 
+  // main join handler
   function joinEvent(e) {
     e.preventDefault();
     if (busy)
@@ -75,6 +77,7 @@ export default function Party() {
     }, 1000);
   }
 
+  // update search filter results and remaining space state every time the event is updated
   useEffect(() => {
     if (!party)
       return;
@@ -82,7 +85,7 @@ export default function Party() {
     setPartyRemainingSpace(party.partyMaxSize - Object.keys(party.partyMembers).length);
   }, [party]);
 
-
+  // event data fetcher
   const fetchData = async () => {
     let data = getParty({ partyId: id });
     data.then(res => {
@@ -97,6 +100,7 @@ export default function Party() {
     });
   }
 
+  // fetch event data on first render
   useEffect(() => {
     fetchData();
   }, []);
@@ -108,8 +112,9 @@ export default function Party() {
         <title>{party.partyName}</title>
       </Helmet>
       <div className='flex flex-col lg:flex-row'>
-        <div className='p-4 m-2 border rounded-[16px] shadow-lg grow lg:grow-0 h-full lg:w-3/6'>
-          <div className='information-group py-4 px-4'>
+        <div className='p-4 m-2 border rounded-[16px] shadow-lg grow lg:grow-0 h-full lg:w-1/2'>
+          {/* main info, besides description */}
+          <div className='information-group py-4 pb-0 px-4'>
             <h1><strong>{party.partyName}</strong></h1>
             <h2>by <strong>{party.partyCreator}</strong></h2>
             <h3><strong>{party.partyLocation}</strong></h3>
@@ -123,16 +128,21 @@ export default function Party() {
                   <span className="font-medium">There {partyRemainingSpace != 1 ? 'are' : 'is'} {partyRemainingSpace} spot{partyRemainingSpace != 1 ? 's' : ''} remaining.</span>
                 </div> : null
             }
-            <div className='w-full h-[1px] bg-[#ddd] rounded-full my-[8px]' />
-            <h2><strong>Description</strong></h2>
-            <div className='min-h-[64px]'>
-              <p>{party.partyDescription}</p>
-            </div>
-
           </div>
+          {/* description */}
+          <div className='information-group'>
+            <div className='w-full h-[1px] bg-[#ddd] rounded-full my-[8px]' />
+            <div className='px-4 pb-4'>
+              <h2><strong>Description</strong></h2>
+              <div className='min-h-[64px]'>
+                <p>{party.partyDescription}</p>
+              </div>
+            </div>
+          </div>
+          {/* registration, only to be shown when > 0 spots are available */}
           {
             partyRemainingSpace > 0 ?
-              <>
+              <div className='registration-group'>
                 <div className='w-full h-[1px] bg-[#ddd] rounded-full my-[8px]' />
                 <form className='input-group px-4 pb-4'>
                   <h2><strong>Registration</strong></h2>
@@ -145,11 +155,12 @@ export default function Party() {
                   </div>
                   <button type='submit' className='px-4 h-12 w-full' onClick={joinEvent} disabled={busy || partyRemainingSpace == 0}><strong>{partyRemainingSpace > 0 ? 'Join Event' : 'Event Full'}</strong></button>
                 </form>
-              </>
+              </div>
               : null
           }
         </div>
-        <div className='p-4 m-2 border rounded-[16px] shadow-lg grow lg:h-full'>
+        {/* event members */}
+        <div className='p-4 m-2 border rounded-[16px] shadow-lg grow lg:h-full mb-24 lg:mb-0'>
           <div className='information-group p-4'>
             <h1><strong>Event Members</strong></h1>
           </div>
@@ -164,11 +175,13 @@ export default function Party() {
             </div>
             <div className='list border rounded-[8px] border-[#ddd] overflow-hidden mb-2'>
               <ol className='min-h-64'>
+                {/* create a default list item at the top for the event host */}
                 <li key={party.partyCreator}>
                   <div className={`px-4 py-2 flex flex-col ${party.partyMembers[party.partyCreator].isHost ? 'bg-[#eee]' : ''}`}>
                     <p><strong>{party.partyCreator}</strong>{party.partyMembers[party.partyCreator].isHost ? ' (Host)' : ''}</p>
                   </div>
                 </li>
+                {/* item for every member in the event except for the event host */}
                 {
                   Object.keys(filteredMemberList).length > 0 ? Object.keys(filteredMemberList).map(member => {
                     return (!party.partyMembers[member].isHost ?
@@ -178,13 +191,14 @@ export default function Party() {
                         </div>
                       </li> : null
                     )
-                  }) :
+                  }) : (
+                    /* if search returns no matches */
                     <li>
                       <div className={'px-4 py-2 flex flex-col'}>
                         <p>No matches were found using the search filters provided.</p>
                       </div>
                     </li>
-                }
+                )}
               </ol>
             </div>
           </div>

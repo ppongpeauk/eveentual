@@ -14,10 +14,11 @@ import moment from 'moment';
 export default function Event() {
   let { id } = useParams();
   let navigate = useNavigate();
+  const { getParty, joinParty } = useStore();
   const [busy, setBusy] = useState(false);
   const [party, setParty] = useState(false);
-  const { getParty, joinParty } = useStore();
   const [partyRemainingSpace, setPartyRemainingSpace] = useState(0);
+  const [memberName, setMemberName] = useState('');
 
   // refs
   const filterNameRef = useRef();
@@ -66,6 +67,7 @@ export default function Event() {
         } else if (result === 'already in party') {
           toast.update(loadingToast, { render: 'You are already registered.', type: 'error', isLoading: false, autoClose: 5000, closeButton: true, closeOnClick: true });
         } else if (result === 'success') {
+          setMemberName('');
           fetchData();
           toast.update(loadingToast, { render: 'You have joined the event.', type: 'success', isLoading: false, autoClose: 5000, closeButton: true, closeOnClick: true });
         }
@@ -150,7 +152,7 @@ export default function Event() {
                     <label>
                       Name:
                       <div />
-                      <input type='text' className='mt-1' ref={memberNameRef} placeholder='Name' />
+                      <input type='text' className='mt-1' placeholder='Name' value={memberName} onChange={(e) => setMemberName(e.target.value)} ref={memberNameRef} />
                     </label>
                   </div>
                   <button type='submit' className='px-4 h-12 w-full' onClick={joinEvent} disabled={busy || partyRemainingSpace == 0}><strong>{partyRemainingSpace > 0 ? 'Join Event' : 'Event Full'}</strong></button>

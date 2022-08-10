@@ -97,7 +97,7 @@ export default function Create() {
       <Helmet>
         <title>Create</title>
       </Helmet>
-      <div className='py-4 px-8 m-2 border rounded-[16px] shadow-lg grow lg:grow-0 h-full'>
+      <div className='py-8 px-8 m-2 border rounded-[16px] shadow-lg grow lg:grow-0 h-full'>
         <h1><strong>Create Event</strong></h1>
         <form>
           <div className='input-group py-0.5 w-72'>

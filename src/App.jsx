@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import reactLogo from './assets/react.svg'
 import './App.css'
@@ -34,7 +34,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path='/'>
-            <Route index element={<Home />} />
+            <Route index element={<Navigate to='/create' replace />} />
             <Route path='/create' element={<Create />} />
             <Route path='/event/:id' element={<Party />} />
             <Route path='*' element={<NotFound />} />

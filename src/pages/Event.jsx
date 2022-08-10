@@ -9,6 +9,8 @@ import { useStore } from '../contexts/StoreContext';
 import { toast } from 'react-toastify'
 import ErrorIcon from '@mui/icons-material/Error';
 
+import moment from 'moment';
+
 export default function Party() {
   let { id } = useParams();
   let navigate = useNavigate();
@@ -114,7 +116,7 @@ export default function Party() {
             <div className='flex'>
               <p className='pr-2'>Spots Left: <strong>{partyRemainingSpace}</strong></p>
             </div>
-            <p>Occurs on {party.partyDate} at {party.partyTime}</p>
+            <p>Occurs on {moment(party.partyDate).format('MMMM D, YYYY')} at {moment(party.partyTime, 'HH:mm').format('h:mm A')}</p>
             {
               partyRemainingSpace <= 3 ?
                 <div className='p-4 my-4 text-sm text-red-700 bg-red-100 rounded-[8px] dark:bg-red-200 dark:text-red-800'>
@@ -133,7 +135,7 @@ export default function Party() {
               <>
                 <div className='w-full h-[1px] bg-[#ddd] rounded-full my-[8px]' />
                 <form className='input-group px-4 pb-4'>
-                  <h2><strong>Register</strong></h2>
+                  <h2><strong>Registration</strong></h2>
                   <div className='mb-4'>
                     <label>
                       Name:

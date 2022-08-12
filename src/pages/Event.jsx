@@ -7,7 +7,7 @@ import { useStore } from '../contexts/StoreContext';
 
 // components
 import { toast } from 'react-toastify'
-import ErrorIcon from '@mui/icons-material/Error';
+import LoadingModal from '../components/LoadingModal';
 
 import moment from 'moment';
 
@@ -108,7 +108,7 @@ export default function Event() {
   }, []);
 
   return (
-    party &&
+    party ? (
     <main className='py-8 px-4 pt-20 lg:h-screen'>
       <Helmet>
         <title>{party.partyName}</title>
@@ -207,5 +207,7 @@ export default function Event() {
         </div>
       </div>
     </main>
-  )
+  ) : (
+    <LoadingModal/>
+  ))
 }
